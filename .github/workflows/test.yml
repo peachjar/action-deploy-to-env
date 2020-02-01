@@ -22,7 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - uses: peachjar/action-install-deploy-tools@v1
       with:
         githubUsername: ${{ secrets.GITHUB_DEPLOY_USER }}
         githubToken: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
+    - uses: ./
+      with:
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        environment: kauai
+        helmChartPath: echo-server/
+        helmReleaseName: echo-server
+        dockerImage: hashicorp/http-echo
+        dockerTag: latest

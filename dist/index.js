@@ -24321,7 +24321,7 @@ function run(exec, context, core) {
                 '--kubeconfig',
                 `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-admins.yml`,
                 'upgrade', helmReleaseName, helmChartPath,
-                '--set-string', `image.tag=git-${dockerTag}`,
+                '--set-string', `image.tag=${dockerTag}`,
                 '--set-string', `gitsha="${gitsha}"`,
                 '--set-string', `image.registryAndName=${dockerImage}`,
                 '--set-string', `image.pullSecret=${pullSecret}`,
