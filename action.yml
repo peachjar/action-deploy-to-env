@@ -1,0 +1,36 @@
+name: 'Deploy to Environment'
+description: "Deploy a service to one of Peachjar's environments."
+author: 'Peachjar Engineering'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+inputs:
+  awsAccessKeyId:
+    required: true
+    description: AWS Access Key ID
+  awsSecretAccessKey:
+    required: true
+    description: AWS Secret Access Key
+  environment:
+    required: true
+    description: Environment to deploy to
+  timeout:
+    required: false
+    description: Override the time to wait (in seconds) on deployment
+    default: '600'
+  imagePullSecret:
+    required: false
+    description: Override the k8s image pull secret
+    default: peachjar-eks-github-pull-secret
+  helmChartPath:
+    required: false
+    description: Override the path to the Helm chart
+  helmReleaseName:
+    required: false
+    description: Override the name of the release to upgrade in Helm
+  dockerImage:
+    required: false
+    description: Override the Docker image (plus registry) to deploy
+  dockerTag:
+    required: false
+    description: Override the Docker image tag to deploy
