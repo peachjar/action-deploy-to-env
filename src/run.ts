@@ -1,6 +1,7 @@
 import { Context } from '@actions/github/lib/context'
 
 import * as im from '@actions/exec/lib/interfaces'
+import ProcessEnv = NodeJS.ProcessEnv
 
 export type ExecFn = (commandLine: string, args?: string[], options?: im.ExecOptions) => Promise<number>
 
@@ -22,7 +23,8 @@ export default async function run(
         debug: (...args: any[]) => void,
         setFailed: (message: string) => void,
         [k: string]: any,
-    }
+    },
+    env: ProcessEnv
 ): Promise<any> {
     try {
         core.info('Deploying service to environment.')
@@ -51,6 +53,16 @@ export default async function run(
         const dockerImage = core.getInput('dockerImage') || getDefaultImage(repository, serviceName)
         const dockerTag = core.getInput('dockerTag') || `git-${gitsha}`
 
+        const extraVars: string[] = [
+            core.getInput('setString1'),
+            core.getInput('setString2'),
+            core.getInput('setString3'),
+            core.getInput('setString4'),
+            core.getInput('setString5'),
+        ]
+        .filter(Boolean)
+        .reduce((acc, kvp) => acc.concat('--set-string', kvp.trim()), [] as string[])
+
         core.debug('Executing Helm upgrade.')
 
         await exec('helm', [
@@ -61,10 +73,11 @@ export default async function run(
             '--set-string', `gitsha="${gitsha}"`,
             '--set-string', `image.registryAndName=${dockerImage}`,
             '--set-string', `image.pullSecret=${pullSecret}`,
+            ...extraVars,
             '--wait', '--timeout', timeout,
         ], {
             cwd: 'peachjar-aloha/',
-            env: Object.assign({}, process.env, {
+            env: Object.assign({}, env, {
                 AWS_ACCESS_KEY_ID: awsAccessKeyId,
                 AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
             }),

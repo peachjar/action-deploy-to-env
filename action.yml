@@ -34,3 +34,21 @@ inputs:
   dockerTag:
     required: false
     description: Override the Docker image tag to deploy
+  setString1:
+    required: false
+    description: key=value
+  setString2:
+    required: false
+    description: key=value
+  setString3:
+    required: false
+    description: key=value
+  setString4:
+    required: false
+    description: key=value
+  setString5:
+    required: false
+    description: key=value
+  setString6:
+    required: false
+    description: key=value

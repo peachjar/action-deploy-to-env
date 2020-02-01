@@ -3772,7 +3772,7 @@ const core = __importStar(__webpack_require__(470));
 const github_1 = __webpack_require__(469);
 const exec_1 = __webpack_require__(986);
 const run_1 = __importDefault(__webpack_require__(861));
-run_1.default(exec_1.exec, github_1.context, core);
+run_1.default(exec_1.exec, github_1.context, core, process.env);
 
 
 /***/ }),
@@ -24294,7 +24294,7 @@ function getServiceName(repo) {
 function getDefaultImage(repo, serviceName) {
     return `docker.pkg.github.com/peachjar/${repo}/${serviceName}`;
 }
-function run(exec, context, core) {
+function run(exec, context, core, env) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info('Deploying service to environment.');
@@ -24316,6 +24316,15 @@ function run(exec, context, core) {
             const helmReleaseName = core.getInput('helmReleaseName') || serviceName;
             const dockerImage = core.getInput('dockerImage') || getDefaultImage(repository, serviceName);
             const dockerTag = core.getInput('dockerTag') || `git-${gitsha}`;
+            const extraVars = [
+                core.getInput('setString1'),
+                core.getInput('setString2'),
+                core.getInput('setString3'),
+                core.getInput('setString4'),
+                core.getInput('setString5'),
+            ]
+                .filter(Boolean)
+                .reduce((acc, kvp) => acc.concat('--set-string', kvp.trim()), []);
             core.debug('Executing Helm upgrade.');
             yield exec('helm', [
                 '--kubeconfig',
@@ -24325,10 +24334,11 @@ function run(exec, context, core) {
                 '--set-string', `gitsha="${gitsha}"`,
                 '--set-string', `image.registryAndName=${dockerImage}`,
                 '--set-string', `image.pullSecret=${pullSecret}`,
+                ...extraVars,
                 '--wait', '--timeout', timeout,
             ], {
                 cwd: 'peachjar-aloha/',
-                env: Object.assign({}, process.env, {
+                env: Object.assign({}, env, {
                     AWS_ACCESS_KEY_ID: awsAccessKeyId,
                     AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
                 }),

@@ -4,4 +4,4 @@ import { exec } from '@actions/exec'
 
 import run from './run'
 
-run(exec, context, core)
+run(exec, context, core, process.env)
