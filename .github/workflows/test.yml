@@ -28,6 +28,12 @@ jobs:
       with:
         githubUsername: ${{ secrets.GITHUB_DEPLOY_USER }}
         githubToken: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
+    - run: |
+       pwd
+       echo "KILAHUEA"
+       ls ../kilahuea/kubefiles/kauai/kubectl_configs/ || true
+       ls ./kilahuea/kubefiles/kauai/kubectl_configs/ || true
+
     - uses: ./
       with:
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
