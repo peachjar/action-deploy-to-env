@@ -31,6 +31,11 @@ jobs:
     - run: |
        pwd
        echo "KILAHUEA"
+       ls
+       echo "./"
+       ls ./
+       echo "../"
+       ls ../
        ls ../kilahuea/kubefiles/kauai/kubectl_configs/ || true
        ls ./kilahuea/kubefiles/kauai/kubectl_configs/ || true
 
