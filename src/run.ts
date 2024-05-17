@@ -92,6 +92,8 @@ export default async function run(
         )
 
         core.info('Migration to helm3 succeeded')
+        core.info('Starting deploy...')
+        core.info(timeout)
 
         await exec('helm', [
             '--kubeconfig',
@@ -102,7 +104,7 @@ export default async function run(
             '--set-string', `image.registryAndName=${dockerImage}`,
             '--set-string', `image.pullSecret=${pullSecret}`,
             ...extraVars,
-            '--wait', '--timeout', timeout,
+            '--wait', '--timeout', `${timeout}`
         ], {
             cwd: 'peachjar-aloha/',
             env: Object.assign({}, env, {

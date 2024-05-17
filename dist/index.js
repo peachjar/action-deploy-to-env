@@ -24347,6 +24347,8 @@ function run(exec, context, core, env) {
                 }),
             });
             core.info('Migration to helm3 succeeded');
+            core.info('Starting deploy...');
+            core.info(timeout);
             yield exec('helm', [
                 '--kubeconfig',
                 `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
@@ -24356,7 +24358,7 @@ function run(exec, context, core, env) {
                 '--set-string', `image.registryAndName=${dockerImage}`,
                 '--set-string', `image.pullSecret=${pullSecret}`,
                 ...extraVars,
-                '--wait', '--timeout', timeout,
+                '--wait', '--timeout', `${timeout}`
             ], {
                 cwd: 'peachjar-aloha/',
                 env: Object.assign({}, env, {
