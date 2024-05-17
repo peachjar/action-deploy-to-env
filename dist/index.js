@@ -24310,7 +24310,7 @@ function run(exec, context, core, env) {
             const repository = context.repo.repo;
             const serviceName = getServiceName(repository);
             const gitsha = context.sha.slice(0, 7);
-            const timeout = core.getInput('timeout') || '600' + 's';
+            const timeout = core.getInput('timeout') || '600';
             const pullSecret = core.getInput('imagePullSecret') || 'peachjar-eks-github-pull-secret';
             const helmChartPath = core.getInput('helmChartPath') || `./${serviceName}`;
             const helmReleaseName = core.getInput('helmReleaseName') || serviceName;
@@ -24348,7 +24348,6 @@ function run(exec, context, core, env) {
             });
             core.info('Migration to helm3 succeeded');
             core.info('Starting deploy...');
-            core.info(timeout);
             yield exec('helm', [
                 '--kubeconfig',
                 `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
@@ -24358,7 +24357,7 @@ function run(exec, context, core, env) {
                 '--set-string', `image.registryAndName=${dockerImage}`,
                 '--set-string', `image.pullSecret=${pullSecret}`,
                 ...extraVars,
-                '--wait', '--timeout', `${timeout}`
+                '--wait', '--timeout', `${timeout}s`
             ], {
                 cwd: 'peachjar-aloha/',
                 env: Object.assign({}, env, {
