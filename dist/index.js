@@ -24329,16 +24329,22 @@ function run(exec, context, core, env) {
             core.info('Adding plugin helm v2to3');
             yield exec('helm', ['plugin', 'install', 'https://github.com/helm/helm-2to3.git']);
             core.info('Starting migration to helm v3');
-            yield exec('helm', [
-                '--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
+            yield exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
                 '2to3', 'convert', helmReleaseName, '--release-versions-max', '200', '--ignore-already-migrated', '--dry-run'
             ], {
+                cwd: 'peachjar-aloha/',
                 env: Object.assign({}, env, {
                     AWS_ACCESS_KEY_ID: awsAccessKeyId,
                     AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
                 }),
             });
-            yield exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`, 'ls']);
+            yield exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`, 'ls'], {
+                cwd: 'peachjar-aloha/',
+                env: Object.assign({}, env, {
+                    AWS_ACCESS_KEY_ID: awsAccessKeyId,
+                    AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+                }),
+            });
             core.info('Migration to helm3 succeeded');
             yield exec('helm', [
                 '--kubeconfig',
