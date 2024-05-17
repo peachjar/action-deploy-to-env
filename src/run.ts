@@ -65,9 +65,27 @@ export default async function run(
 
         core.debug('Executing Helm upgrade.')
 
+        core.info('Adding plugin helm v2to3')
+        await exec('helm', ['plugin', 'install', 'https://github.com/helm/helm-2to3.git'])
+
+        core.info('Starting migration to helm v3')
+
+        await exec('helm', [
+                '--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
+                '2to3','convert', helmReleaseName, '--release-versions-max', '200','--ignore-already-migrated', '--dry-run' 
+            ], {
+                env: Object.assign({}, env, {
+                    AWS_ACCESS_KEY_ID: awsAccessKeyId,
+                    AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+                }),
+            })
+        await exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`, 'ls'])    
+    
+        core.info('Migration to helm3 succeeded')
+
         await exec('helm', [
             '--kubeconfig',
-            `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-admins.yml`,
+            `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
             'upgrade', helmReleaseName, helmChartPath,
             '--set-string', `image.tag=${dockerTag}`,
             '--set-string', `gitsha="${gitsha}"`,
