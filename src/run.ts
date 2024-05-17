@@ -46,7 +46,7 @@ export default async function run(
         const serviceName = getServiceName(repository)
         const gitsha = context.sha.slice(0, 7)
 
-        const timeout = core.getInput('timeout') || '600s'
+        const timeout = core.getInput('timeout') || '600'+'s'
         const pullSecret = core.getInput('imagePullSecret') || 'peachjar-eks-github-pull-secret'
         const helmChartPath = core.getInput('helmChartPath') || `./${serviceName}`
         const helmReleaseName = core.getInput('helmReleaseName') || serviceName
