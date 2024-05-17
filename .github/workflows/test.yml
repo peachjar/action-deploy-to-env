@@ -25,8 +25,8 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: peachjar/action-install-deploy-tools@v1
+    - uses: actions/checkout@v4
+    - uses: peachjar/action-install-deploy-tools@v4
       with:
         githubUsername: ${{ secrets.GITHUB_DEPLOY_USER }}
         githubToken: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
