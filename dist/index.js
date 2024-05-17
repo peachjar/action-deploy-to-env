@@ -24310,7 +24310,7 @@ function run(exec, context, core, env) {
             const repository = context.repo.repo;
             const serviceName = getServiceName(repository);
             const gitsha = context.sha.slice(0, 7);
-            const timeout = core.getInput('timeout') || '600';
+            const timeout = core.getInput('timeout') || '600s';
             const pullSecret = core.getInput('imagePullSecret') || 'peachjar-eks-github-pull-secret';
             const helmChartPath = core.getInput('helmChartPath') || `./${serviceName}`;
             const helmReleaseName = core.getInput('helmReleaseName') || serviceName;
@@ -24329,8 +24329,9 @@ function run(exec, context, core, env) {
             core.info('Adding plugin helm v2to3');
             yield exec('helm', ['plugin', 'install', 'https://github.com/helm/helm-2to3.git']);
             core.info('Starting migration to helm v3');
-            yield exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
-                '2to3', 'convert', helmReleaseName, '--release-versions-max', '200', '--ignore-already-migrated', '--dry-run'
+            yield exec('helm', [
+                '--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
+                '2to3', 'convert', helmReleaseName, '--release-versions-max', '200', '--ignore-already-migrated'
             ], {
                 cwd: 'peachjar-aloha/',
                 env: Object.assign({}, env, {
