@@ -16,12 +16,10 @@ jobs:
         node-version: 12
     - run: |
         npm install
-        npm run all
-    - name: Archive test coverage
-      uses: actions/upload-artifact@v1
-      with:
-        name: test-coverage
-        path: coverage
+        npm npm run build 
+        npm run pack
+        npm run coverage
+
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
