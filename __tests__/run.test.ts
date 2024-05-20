@@ -44,7 +44,7 @@ describe('Run function', () => {
             await run(exec, context, core, { FOO: 'bar' })
             expect(exec).toHaveBeenCalledWith('helm', [
                 '--kubeconfig',
-                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-admins.yml`,
+                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-beta-admins.yml`,
                 'upgrade', 'svc-foobar', './svc-foobar',
                 '--set-string', `image.tag=git-fa1e24f`,
                 '--set-string', `gitsha="fa1e24f"`,
@@ -139,7 +139,7 @@ describe('Run function', () => {
             await run(exec, context, core, { FOO: 'bar' })
             expect(exec).toHaveBeenCalledWith('helm', [
                 '--kubeconfig',
-                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-admins.yml`,
+                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-beta-admins.yml`,
                 'upgrade', 'circus', './helm/foobaz',
                 '--set-string', `image.tag=v1.2.3`,
                 '--set-string', `gitsha="fa1e24f"`,
@@ -178,7 +178,7 @@ describe('Run function', () => {
             await run(exec, context, core, { FOO: 'bar' })
             expect(exec).toHaveBeenCalledWith('helm', [
                 '--kubeconfig',
-                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-admins.yml`,
+                `../kilauea/kubefiles/kauai/kubectl_configs/kauai-kube-config-beta-admins.yml`,
                 'upgrade', 'svc-foobar', './svc-foobar',
                 '--set-string', `image.tag=git-fa1e24f`,
                 '--set-string', `gitsha="fa1e24f"`,
