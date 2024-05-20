@@ -31,7 +31,7 @@ jobs:
     - run: |
        pwd
        echo "Ahoha"
-       cat ./peahjar-aloha/echo-server/templates/deployment.yml || true
+       cat ./peachjar-aloha/echo-server/templates/deployment.yml || true
 
     - uses: ./
       with:
