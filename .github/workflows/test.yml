@@ -30,9 +30,8 @@ jobs:
         githubToken: ${{ secrets.GITHUB_DEPLOY_TOKEN }}
     - run: |
        pwd
-       echo "KILAHUEA"
-       ls ../kilauea/kubefiles/kauai/kubectl_configs/ || true
-       ls ./kilauea/kubefiles/kauai/kubectl_configs/ || true
+       echo "Ahoha"
+       cat ./peahjar-aloha/echo-server/templates/deployment.yml || true
 
     - uses: ./
       with:
