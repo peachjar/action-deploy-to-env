@@ -47,3 +47,5 @@ with:
     setString4: tier=backend
     setString5: sha=${{ github.sha }}
 ```
+### action-deploy-to-env@v4 changes
+The new version of the action includes a previous step to run a migration from helm2 to helm 3 previous to execute the helm upgrade. 

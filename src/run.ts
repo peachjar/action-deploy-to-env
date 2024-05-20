@@ -72,7 +72,7 @@ export default async function run(
 
         await exec('helm', [
             '--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
-            '2to3', 'convert', helmReleaseName, '--release-versions-max', '200', '--ignore-already-migrated'
+            '2to3', 'convert', helmReleaseName, '--ignore-already-migrated'
         ], {
             cwd: 'peachjar-aloha/',
             env: Object.assign({}, env, {
