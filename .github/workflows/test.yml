@@ -4,22 +4,8 @@ on: # rebuild any PRs and main branch changes
   push:
     branches:
       - master
-      - DEVOP-32
 
 jobs:
-  # build: # make sure build/ci work properly
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v4
-  #   - uses: actions/setup-node@v4
-  #     with:
-  #       node-version: 12
-  #   - run: |
-  #       npm install
-  #       npm npm run build 
-  #       npm run pack
-  #       npm run coverage
-
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
