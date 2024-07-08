@@ -65,23 +65,46 @@ export default async function run(
 
         core.info('Starting deploy...')
 
-        await exec('helm', [
-            '--kubeconfig',
-            `../kilauea/kubefiles/${environment}/kubeconfig-github-actions/${environment}-kube-config-admins.yml`,
-            'upgrade', helmReleaseName, helmChartPath,
-            '--set-string', `image.tag=${dockerTag}`,
-            '--set-string', `gitsha="${gitsha}"`,
-            '--set-string', `image.registryAndName=${dockerImage}`,
-            '--set-string', `image.pullSecret=${pullSecret}`,
-            ...extraVars,
-            '--wait', '--timeout', `${timeout}s`
-        ], {
-            cwd: 'peachjar-aloha/',
-            env: Object.assign({}, env, {
-                AWS_ACCESS_KEY_ID: awsAccessKeyId,
-                AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-            }),
-        })
+        if(environment === 'maui'){
+            core.info('Deploying to maui')
+            await exec('helm', [
+                '--kubeconfig',
+                `./kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-admins.yml`,
+                'upgrade', helmReleaseName, helmChartPath,
+                '--set-string', `image.tag=${dockerTag}`,
+                '--set-string', `gitsha="${gitsha}"`,
+                '--set-string', `image.registryAndName=${dockerImage}`,
+                '--set-string', `image.pullSecret=${pullSecret}`,
+                ...extraVars,
+                '--wait', '--timeout', `${timeout}s`
+            ], {
+                cwd: 'peachjar-aloha/',
+                env: Object.assign({}, env, {
+                    AWS_ACCESS_KEY_ID: awsAccessKeyId,
+                    AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+                }),
+            })
+        }else{
+            await exec('helm', [
+                '--kubeconfig',
+                `../kilauea/kubefiles/${environment}/kubeconfig-github-actions/${environment}-kube-config-admins.yml`,
+                'upgrade', helmReleaseName, helmChartPath,
+                '--set-string', `image.tag=${dockerTag}`,
+                '--set-string', `gitsha="${gitsha}"`,
+                '--set-string', `image.registryAndName=${dockerImage}`,
+                '--set-string', `image.pullSecret=${pullSecret}`,
+                ...extraVars,
+                '--wait', '--timeout', `${timeout}s`
+            ], {
+                cwd: 'peachjar-aloha/',
+                env: Object.assign({}, env, {
+                    AWS_ACCESS_KEY_ID: awsAccessKeyId,
+                    AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+                }),
+            })
+        }
+
+      
 
         core.info('Deployment complete.')
 
