@@ -52,7 +52,7 @@ export default async function run(
         const helmReleaseName = core.getInput('helmReleaseName') || serviceName
         const dockerImage = core.getInput('dockerImage') || getDefaultImage(repository, serviceName)
         const dockerTag = core.getInput('dockerTag') || `git-${gitsha}`
-        const valuesFile = core.getInput('helmChartPath')+`values-${environment}.yaml` || `./${serviceName}/values-${environment}.yaml`
+        const valuesFile = (core.getInput('helmChartPath') || `./${serviceName}/`)+`values-${environment}.yaml`
 
         const extraVars: string[] = [
             core.getInput('setString1'),
