@@ -67,7 +67,7 @@ export default async function run(
             await exec('helm', [
                 '--kubeconfig',
                 `../kilauea/kubefiles/${environment}/kubeconfig-github-actions/${environment}-kube-config-admins.yml`,
-                'upgrade', helmReleaseName, helmChartPath, '-f', `${helmChartPath}/values-${environment}.yaml`,
+                'upgrade', helmReleaseName, helmChartPath, '-f', `${helmChartPath}values-${environment}.yaml`,
                 '--set-string', `image.tag=${dockerTag}`,
                 '--set-string', `gitsha="${gitsha}"`,
                 '--set-string', `image.registryAndName=${dockerImage}`,
