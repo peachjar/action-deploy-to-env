@@ -63,54 +63,24 @@ export default async function run(
         .filter(Boolean)
         .reduce((acc, kvp) => acc.concat('--set-string', kvp.trim()), [] as string[])
 
-        core.debug('Executing Helm upgrade.')
-
-        core.info('Adding plugin helm v2to3')
-        await exec('helm', ['plugin', 'install', 'https://github.com/helm/helm-2to3.git'])
-
-        core.info('Starting migration to helm v3')
-
-        await exec('helm', [
-            '--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
-            '2to3', 'convert', helmReleaseName, '--ignore-already-migrated'
-        ], {
-            cwd: 'peachjar-aloha/',
-            env: Object.assign({}, env, {
-                AWS_ACCESS_KEY_ID: awsAccessKeyId,
-                AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-            }),
-        })
-
-        await exec('helm', ['--kubeconfig', `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`, 'ls'],
-        {
-            cwd: 'peachjar-aloha/',
-            env: Object.assign({}, env, {
-                AWS_ACCESS_KEY_ID: awsAccessKeyId,
-                AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-            }),
-        }
-        )
-
-        core.info('Migration to helm3 succeeded')
         core.info('Starting deploy...')
-
-        await exec('helm', [
-            '--kubeconfig',
-            `../kilauea/kubefiles/${environment}/kubectl_configs/${environment}-kube-config-beta-admins.yml`,
-            'upgrade', helmReleaseName, helmChartPath,
-            '--set-string', `image.tag=${dockerTag}`,
-            '--set-string', `gitsha="${gitsha}"`,
-            '--set-string', `image.registryAndName=${dockerImage}`,
-            '--set-string', `image.pullSecret=${pullSecret}`,
-            ...extraVars,
-            '--wait', '--timeout', `${timeout}s`
-        ], {
-            cwd: 'peachjar-aloha/',
-            env: Object.assign({}, env, {
-                AWS_ACCESS_KEY_ID: awsAccessKeyId,
-                AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
-            }),
-        })
+            await exec('helm', [
+                '--kubeconfig',
+                `../kilauea/kubefiles/${environment}/kubeconfig-github-actions/${environment}-kube-config-admins.yml`,
+                'upgrade', helmReleaseName, helmChartPath, '-f', `${helmChartPath}values-${environment}.yaml`,
+                '--set-string', `image.tag=${dockerTag}`,
+                '--set-string', `gitsha="${gitsha}"`,
+                '--set-string', `image.registryAndName=${dockerImage}`,
+                '--set-string', `image.pullSecret=${pullSecret}`,
+                ...extraVars,
+                '--wait', '--timeout', `${timeout}s`
+            ], {
+                cwd: 'peachjar-aloha/',
+                env: Object.assign({}, env, {
+                    AWS_ACCESS_KEY_ID: awsAccessKeyId,
+                    AWS_SECRET_ACCESS_KEY: awsSecretAccessKey,
+                }),
+            })
 
         core.info('Deployment complete.')
 
